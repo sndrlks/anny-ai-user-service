@@ -11,6 +11,8 @@ COPY gradle gradle
 COPY gradlew .
 COPY build.gradle.kts settings.gradle.kts
 
+RUN chmod +x gradlew
+
 # Download dependencies first (improves cache utilization)
 RUN ./gradlew --no-daemon dependencies
 

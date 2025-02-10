@@ -1,7 +1,6 @@
 # .github/workflows/ci.yml
 name: CI
 
-# Triggers: Run on push to main and on pull requests targeting main
 on:
   push:
     branches: [ main ]
