@@ -8,24 +8,21 @@ on:
 
 jobs:
   build:
-    # The job will run on a GitHub-hosted Ubuntu runner
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout your repository code
       - name: Checkout Code
         uses: actions/checkout@v3
-        # This action clones your repo into the runner so subsequent steps can work with your code
 
-      # Step 2: Set up JDK 17 using a pre-built action
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
-        # 'temurin' is one of the distributions available. This step makes sure the correct JDK is installed.
 
-      # Step 3: Cache Gradle dependencies
+      - name: Grant execute permissions for Gradle Wrapper
+        run: chmod +x ./gradlew
+
       - name: Cache Gradle dependencies
         uses: actions/cache@v3
         with:
@@ -34,12 +31,9 @@ jobs:
             ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: ${{ runner.os }}-gradle
-        # Caching helps speed up subsequent builds by reusing previously downloaded dependencies.
 
-      # Step 4: Build and test the project using Gradle
       - name: Build with Gradle
         run: ./gradlew build --no-daemon -x test
-        # This command runs your Gradle wrapper to build the project and run tests.
 
   docker:
     runs-on: ubuntu-latest
