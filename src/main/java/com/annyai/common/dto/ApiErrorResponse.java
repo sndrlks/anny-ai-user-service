@@ -10,6 +10,9 @@ public record ApiErrorResponse(int status,
                                LocalDateTime timestamp,
                                List<String> details) {
 
+    /**
+     * INTERNAL: Do not use directly. Use factory methods instead.
+     */
     public ApiErrorResponse(HttpStatus status, String message, List<String> details) {
         this(status.value(), message, LocalDateTime.now(), details);
     }
@@ -22,19 +25,16 @@ public record ApiErrorResponse(int status,
         return new ApiErrorResponse(status, message, List.of(details));
     }
 
-    public static ApiErrorResponse badRequest(String message, String... details) {
-        return new ApiErrorResponse(HttpStatus.BAD_REQUEST, message, List.of(details));
-    }
-
     public static ApiErrorResponse badRequest(String... details) {
-        return badRequest(HttpStatus.BAD_REQUEST.getReasonPhrase(), details);
+        return new ApiErrorResponse(HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.getReasonPhrase(), List.of(details));
     }
 
-    public static ApiErrorResponse internalError(String message, String... details) {
-        return new ApiErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, message, List.of(details));
-    }
     public static ApiErrorResponse internalError(String... details) {
-        return internalError(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), details);
+        return new ApiErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), List.of(details));
+    }
+
+    public static ApiErrorResponse unauthorized(String... details) {
+        return new ApiErrorResponse(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase(), List.of(details));
     }
 
 }

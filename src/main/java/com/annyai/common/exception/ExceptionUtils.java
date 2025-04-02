@@ -24,12 +24,16 @@ public class ExceptionUtils {
                 .replaceAll("(?i)jwt[^\\s]*", "jwt=****");
     }
 
-    public static void logSafeError(Logger log, Throwable ex, String contextMessage, boolean isDev) {
-        Throwable root = getRootCause(ex);
+    public static void logSafeError(Logger log, String contextMessage, Throwable ex, boolean isDev) {
         if (isDev) {
-            log.error("{}: {}", contextMessage, root.getMessage(), ex);
+            log.error("{}: {}", contextMessage, ex.getMessage(), ex);
         } else {
-            log.error("{}: {}", contextMessage, maskSensitive(root.getMessage()));
+            log.error("{}: {}", contextMessage, maskSensitive(ex.getMessage()));
         }
+    }
+
+    public static String getSafeMessage(Throwable ex, boolean isDev) {
+        String msg = ex.getMessage();
+        return isDev ? msg : maskSensitive(msg);
     }
 }

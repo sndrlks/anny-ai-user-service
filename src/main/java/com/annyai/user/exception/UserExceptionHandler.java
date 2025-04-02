@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class UserExceptionHandler extends BaseExceptionHandler {
 
-    private Logger log = LoggerFactory.getLogger(UserExceptionHandler.class);
+    private final Logger log = LoggerFactory.getLogger(UserExceptionHandler.class);
 
     public UserExceptionHandler(Environment env) {
         super(env);
@@ -22,15 +22,10 @@ public class UserExceptionHandler extends BaseExceptionHandler {
 
     @ExceptionHandler(UserException.class)
     public ResponseEntity<ApiErrorResponse> handleUserExceptions(UserException ex) {
-        Throwable rootCause = ExceptionUtils.getRootCause(ex);
-        ExceptionUtils.logSafeError(log, ex, ex.getMessage(), isDevOrTest());
-        ApiErrorResponse errorResponse = new ApiErrorResponse(
-                ex.getStatus(),
-                ex.getMessage(),
-                ex.getDetails()
-        );
+        ExceptionUtils.logSafeError(log, ex.getMessage(), ex, isDevOrTest());
         return ResponseEntity
                 .status(ex.getStatus())
-                .body(errorResponse);
+                .body(ApiErrorResponse
+                        .of(ex.getStatus(), ex.getMessage(), ex.getDetails()));
     }
 }

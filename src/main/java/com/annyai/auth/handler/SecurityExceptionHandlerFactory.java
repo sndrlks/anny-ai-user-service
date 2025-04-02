@@ -6,7 +6,6 @@ import com.annyai.common.dto.ApiErrorResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.slf4j.Logger;
-
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,7 +14,6 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.List;
 
 @Component
 public class SecurityExceptionHandlerFactory {
@@ -30,13 +28,7 @@ public class SecurityExceptionHandlerFactory {
     public AccessDeniedHandler accessDeniedHandler() {
         return (request, response, ex) -> {
             log.warn("Access denied for path [{}]: {}", request.getRequestURI(), ex.getMessage());
-
-            ApiErrorResponse error = new ApiErrorResponse(
-                    HttpStatus.FORBIDDEN,
-                    "Access Denied",
-                    List.of(ex.getMessage())
-            );
-
+            ApiErrorResponse error = ApiErrorResponse.of(HttpStatus.FORBIDDEN, "Access Denied", ex.getMessage());
             writeError(response, HttpStatus.FORBIDDEN, error);
         };
     }
@@ -44,13 +36,7 @@ public class SecurityExceptionHandlerFactory {
     public AuthenticationEntryPoint authenticationEntryPoint() {
         return (request, response, ex) -> {
             log.warn("Unauthorized request to [{}]: {}", request.getRequestURI(), ex.getMessage());
-
-            ApiErrorResponse error = new ApiErrorResponse(
-                    HttpStatus.UNAUTHORIZED,
-                    "Unauthorized",
-                    List.of(ex.getMessage())
-            );
-
+            ApiErrorResponse error = ApiErrorResponse.unauthorized(ex.getMessage());
             writeError(response, HttpStatus.UNAUTHORIZED, error);
         };
     }

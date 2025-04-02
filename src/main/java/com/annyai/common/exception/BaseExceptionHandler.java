@@ -6,7 +6,7 @@ import java.util.Arrays;
 
 public abstract class BaseExceptionHandler {
 
-    private final Environment env;
+    protected final Environment env;
 
     protected BaseExceptionHandler(Environment env) {
         this.env = env;
