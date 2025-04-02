@@ -34,6 +34,11 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build --no-daemon -x test
 
+#      - name: Run OWASP Dependency Check
+#        run: ./gradlew dependencyCheckAnalyze
+#        env:
+#          NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
+
   docker:
     runs-on: ubuntu-latest
     needs: build

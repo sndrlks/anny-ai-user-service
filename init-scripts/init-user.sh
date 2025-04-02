@@ -1,0 +1,13 @@
+#!/bin/bash
+set -e
+
+echo "Creating database user: $APP_USER"
+
+psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
+    CREATE USER $APP_USER WITH PASSWORD '$APP_PASSWORD';
+    GRANT CONNECT ON DATABASE $POSTGRES_DB TO $APP_USER;
+    GRANT USAGE, CREATE ON SCHEMA public TO $APP_USER;
+    GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO $APP_USER;
+EOSQL
+
+echo "User $APP_USER created successfully."
