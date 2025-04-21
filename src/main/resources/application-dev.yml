@@ -4,6 +4,12 @@ spring:
         username: user_service_app
         password: user_service123
         driver-class-name: org.postgresql.Driver
+    data:
+        redis:
+            host: localhost
+            port: 6379
+            timeout: 2s
+            password: user_service_redis
     jpa:
         hibernate:
             ddl-auto: validate  # Use validate or none in production
@@ -22,9 +28,15 @@ security:
     user: admin
     password: admin
     jwt:
-        secret-key: ${JWT_SECRET_KEY:s3cr3tK3y12345}
-        expiration: 3600000 # 1 hour
+        secret-key: s3cr3tK3y12345
+        expiration: 60m
 
+app:
+    auth:
+        refresh-token:
+            prefix: "rt:"
+            user-mapping-prefix: "rt:user:"
+            ttl: 5d
 
 ##logging:
 ##    level:

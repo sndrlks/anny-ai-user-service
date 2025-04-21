@@ -37,6 +37,7 @@ dependencies {
 	implementation("com.auth0:java-jwt:${jjwtVersion}")
 	implementation("org.hibernate.validator:hibernate-validator:$hibernateValidatorVersion")
 	implementation("net.logstash.logback:logstash-logback-encoder:$logstashVersion")
+	implementation("org.springframework.boot:spring-boot-starter-data-redis")
 
 	runtimeOnly("org.postgresql:postgresql")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
