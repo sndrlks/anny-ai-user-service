@@ -2,6 +2,8 @@ package com.annyai.common.config;
 
 import com.annyai.auth.filter.JwtAuthenticationFilter;
 import com.annyai.auth.handler.SecurityExceptionHandlerFactory;
+import com.annyai.common.Routes;
+import org.springframework.http.HttpMethod;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,7 +30,13 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/auth/login/**", "/api/v1/users/register/**").permitAll()
+                        // Public endpoints: login, refresh, register
+                        .requestMatchers(HttpMethod.POST, Routes.Auth.BASE + Routes.Auth.LOGIN).permitAll()
+                        .requestMatchers(HttpMethod.POST, Routes.Auth.BASE + Routes.Auth.REFRESH).permitAll()
+                        .requestMatchers(HttpMethod.POST, Routes.User.BASE + Routes.User.REGISTER).permitAll()
+                        // Logout requires authenticated user with appropriate role
+                        .requestMatchers(HttpMethod.POST, Routes.Auth.BASE + Routes.Auth.LOGOUT).hasAnyRole("USER", "ADMIN")
+                        // All other endpoints require authentication
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)

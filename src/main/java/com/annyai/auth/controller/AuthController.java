@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 @RestController
 @RequestMapping(Routes.Auth.BASE)
@@ -42,6 +43,7 @@ public class AuthController {
     }
 
     @PostMapping(Routes.Auth.LOGOUT)
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<Void> logout(@RequestBody @Valid LogoutRequest request) {
         refreshTokenService.revokeRefreshToken(request.refreshToken());
         return ResponseEntity.noContent().build();
